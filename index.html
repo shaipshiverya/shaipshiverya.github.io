@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHAIPSHI — Data Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111;
+  --white: #f0ede6;
+  --offwhite: #c8c4bb;
+  --muted: #5a5850;
+  --accent: #e8ff47;
+  --accent2: #ff6b35;
+  --border: rgba(240,237,230,0.07);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(232,255,71,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+}
+.cursor.hover { width: 16px; height: 16px; }
+.cursor-ring.hover { width: 60px; height: 60px; border-color: var(--accent); }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.75rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  mix-blend-mode: difference;
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  text-decoration: none;
+}
+.nav-right {
+  display: flex; gap: 2.5rem;
+  list-style: none;
+}
+.nav-right a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--offwhite);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-right a:hover { color: var(--accent); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 3rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(18vw, 22vw, 28vw);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(240,237,230,0.04);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.hero-tag::before {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--muted);
+}
+
+.hero-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(6rem, 18vw, 18rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+.hero-name span { color: var(--accent); }
+
+.hero-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.hero-tagline {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  color: var(--offwhite);
+  max-width: 480px;
+  line-height: 1.4;
+}
+.hero-tagline em {
+  font-style: normal;
+  color: var(--accent);
+}
+.hero-scroll {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.hero-scroll::after {
+  content: '';
+  width: 1px;
+  height: 40px;
+  background: var(--muted);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.3; transform: scaleY(0.5); }
+}
+
+/* MARQUEE */
+.marquee-wrap {
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  background: var(--bg2);
+}
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marquee 18s linear infinite;
+  width: max-content;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  white-space: nowrap;
+}
+.marquee-item::after {
+  content: '✦';
+  color: var(--accent);
+  font-size: 0.6rem;
+}
+
+/* ABOUT */
+.about {
+  padding: 7rem 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 6rem;
+  border-bottom: 1px solid var(--border);
+}
+.about-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  padding-top: 0.5rem;
+}
+.about-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9rem;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(240,237,230,0.08);
+  line-height: 1;
+}
+.about-text h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  color: var(--white);
+  font-weight: 400;
+  line-height: 1.35;
+  margin-bottom: 2rem;
+}
+.about-text h2 em {
+  font-style: italic;
+  color: var(--offwhite);
+}
+.about-text p {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  max-width: 520px;
+}
+.about-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+.skill-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--offwhite);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.9rem;
+  border-radius: 2rem;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+.skill-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(232,255,71,0.05);
+}
+
+/* PROJECTS */
+.projects { padding: 7rem 3rem; }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 4rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  letter-spacing: 0.04em;
+  color: var(--white);
+  line-height: 1;
+}
+.section-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  padding-bottom: 0.5rem;
+}
+
+.project-list { display: flex; flex-direction: column; }
+
+.project-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.project-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: rgba(232,255,71,0.04);
+  transition: width 0.35s ease;
+}
+.project-row:hover::before { width: 100%; }
+.project-row:hover .proj-num { color: var(--accent); }
+.project-row:hover .proj-name { color: var(--accent); }
+.project-row:hover .proj-arrow { transform: translate(4px, -4px); color: var(--accent); }
+
+.proj-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  transition: color 0.2s;
+}
+.proj-main {}
+.proj-name {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.4rem;
+  transition: color 0.2s;
+}
+.proj-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 540px;
+}
+.proj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.proj-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--accent);
+  background: rgba(232,255,71,0.07);
+  border: 1px solid rgba(232,255,71,0.15);
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+  letter-spacing: 0.05em;
+}
+.proj-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+.proj-arrow {
+  font-size: 1.4rem;
+  color: var(--muted);
+  transition: all 0.2s;
+  line-height: 1;
+}
+.proj-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* CONTACT */
+.contact {
+  padding: 7rem 3rem;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: end;
+}
+.contact-left h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 9rem);
+  letter-spacing: 0.02em;
+  color: var(--white);
+  line-height: 0.9;
+  margin-bottom: 1.5rem;
+}
+.contact-left h2 span { color: var(--accent); display: block; }
+.contact-sub {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 380px;
+}
+.contact-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+}
+.contact-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+.contact-link:hover {
+  border-color: var(--accent);
+  background: rgba(232,255,71,0.05);
+  color: var(--accent);
+}
+.contact-link span {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.contact-link:hover span { color: var(--accent); }
+
+/* FOOTER */
+footer {
+  padding: 2rem 3rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+footer p {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+/* ANIMATIONS */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  nav { padding: 1.25rem 1.5rem; }
+  .hero { padding: 0 1.5rem 2.5rem; }
+  .about { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 1.5rem; }
+  .about-number { font-size: 6rem; }
+  .projects { padding: 4rem 1.5rem; }
+  .project-row { grid-template-columns: 50px 1fr; gap: 1rem; }
+  .proj-right { display: none; }
+  .contact { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+  footer { padding: 1.5rem; }
+  .nav-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">SV</a>
+  <ul class="nav-right">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://github.com/shaipshiverya" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">DATA</div>
+  <div class="hero-tag">Data Analyst · Open to Work</div>
+  <h1 class="hero-name">SHAIPSHI</h1>
+  <div class="hero-bottom">
+    <p class="hero-tagline"><em>I make data confess.</em><br>Turning numbers into decisions, one dataset at a time.</p>
+    <div class="hero-scroll">Scroll</div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Python</div>
+    <div class="marquee-item">MySQL</div>
+    <div class="marquee-item">Power BI</div>
+    <div class="marquee-item">Excel</div>
+    <div class="marquee-item">Pandas</div>
+    <div class="marquee-item">Scikit-Learn</div>
+    <div class="marquee-item">Matplotlib</div>
+    <div class="marquee-item">Plotly</div>
+    <div class="marquee-item">NumPy</div>
+    <div class="marquee-item">Seaborn</div>
+    <div class="marquee-item">DAX</div>
+    <div class="marquee-item">Jupyter</div>
+    <!-- duplicate -->
+    <div class="marquee-item">Python</div>
+    <div class="marquee-item">MySQL</div>
+    <div class="marquee-item">Power BI</div>
+    <div class="marquee-item">Excel</div>
+    <div class="marquee-item">Pandas</div>
+    <div class="marquee-item">Scikit-Learn</div>
+    <div class="marquee-item">Matplotlib</div>
+    <div class="marquee-item">Plotly</div>
+    <div class="marquee-item">NumPy</div>
+    <div class="marquee-item">Seaborn</div>
+    <div class="marquee-item">DAX</div>
+    <div class="marquee-item">Jupyter</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <p class="about-label">// 001 — About</p>
+    <div class="about-number">01</div>
+  </div>
+  <div class="about-text reveal">
+    <h2>Aspiring Data Analyst who <em>finds what the data is hiding.</em></h2>
+    <p>I'm passionate about uncovering patterns in raw data and translating them into stories that actually matter. My toolkit covers the full analysis pipeline — from SQL queries to Python notebooks to Power BI dashboards.</p>
+    <p>I've built 12+ projects across e-commerce, healthcare, food delivery, entertainment, and global markets — each one starting with a question and ending with an answer.</p>
+    <div class="about-skills">
+      <span class="skill-pill">Python</span>
+      <span class="skill-pill">MySQL</span>
+      <span class="skill-pill">Power BI</span>
+      <span class="skill-pill">Excel</span>
+      <span class="skill-pill">Pandas</span>
+      <span class="skill-pill">NumPy</span>
+      <span class="skill-pill">Matplotlib</span>
+      <span class="skill-pill">Plotly</span>
+      <span class="skill-pill">Scikit-Learn</span>
+      <span class="skill-pill">Seaborn</span>
+      <span class="skill-pill">DAX</span>
+      <span class="skill-pill">Git</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="section-header reveal">
+    <h2 class="section-title">PROJECTS</h2>
+    <span class="section-count">09 works</span>
+  </div>
+  <div class="project-list">
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/MYNTRA-SQL-Analysis" target="_blank">
+      <span class="proj-num">001</span>
+      <div class="proj-main">
+        <div class="proj-name">Myntra SQL Analysis</div>
+        <div class="proj-desc">Brand performance, price segmentation & rating intelligence across Nike & Adidas via 16 business queries.</div>
+        <div class="proj-tags"><span class="proj-tag">MySQL</span><span class="proj-tag">SQL</span><span class="proj-tag">E-commerce</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">SQL</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Swiggy-Sales-Analysis-" target="_blank">
+      <span class="proj-num">002</span>
+      <div class="proj-main">
+        <div class="proj-name">Swiggy Sales Analysis</div>
+        <div class="proj-desc">City-wise restaurant performance, supply-demand gaps, and Biryani expansion recommendation for Pune.</div>
+        <div class="proj-tags"><span class="proj-tag">MySQL</span><span class="proj-tag">SQL</span><span class="proj-tag">Food-tech</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">SQL</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Power_BI_Projects/blob/main/good_reads.pdf" target="_blank">
+      <span class="proj-num">003</span>
+      <div class="proj-main">
+        <div class="proj-name">Books Data Dashboard</div>
+        <div class="proj-desc">Power BI dashboard on a global books dataset. 3bn reach, 3.90 avg rating. Top author: J.K. Rowling.</div>
+        <div class="proj-tags"><span class="proj-tag">Power BI</span><span class="proj-tag">DAX</span><span class="proj-tag">Dashboard</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">Power BI</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Data_Analysis_python_projects/blob/main/imdb_final_project.ipynb" target="_blank">
+      <span class="proj-num">004</span>
+      <div class="proj-main">
+        <div class="proj-name">IMDb Movie Analysis</div>
+        <div class="proj-desc">Ratings, genres and trends in the IMDb dataset. Full cleaning pipeline + visualization with Matplotlib.</div>
+        <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Pandas</span><span class="proj-tag">Matplotlib</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">Python</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Data_Science_python_projects/blob/main/data_science_gold_prediction_project_.ipynb" target="_blank">
+      <span class="proj-num">005</span>
+      <div class="proj-main">
+        <div class="proj-name">Gold Price Prediction</div>
+        <div class="proj-desc">ML model forecasting gold price trends from financial time-series. Feature engineering + model evaluation.</div>
+        <div class="proj-tags"><span class="proj-tag">Scikit-Learn</span><span class="proj-tag">ML</span><span class="proj-tag">Finance</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">ML</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Data_Science_python_projects/blob/main/diabetes_prediction_dataset.ipynb" target="_blank">
+      <span class="proj-num">006</span>
+      <div class="proj-main">
+        <div class="proj-name">Diabetes Prediction</div>
+        <div class="proj-desc">Classification model predicting diabetes risk from patient health data with accuracy benchmarking.</div>
+        <div class="proj-tags"><span class="proj-tag">Scikit-Learn</span><span class="proj-tag">Classification</span><span class="proj-tag">Healthcare</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">ML</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Data_Analysis_python_projects/blob/main/netflix_dataset.ipynb" target="_blank">
+      <span class="proj-num">007</span>
+      <div class="proj-main">
+        <div class="proj-name">Netflix Content Analysis</div>
+        <div class="proj-desc">Genre, country, and rating breakdowns of Netflix's library with catalog evolution trend analysis.</div>
+        <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Plotly</span><span class="proj-tag">EDA</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">Python</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Data_Analysis_python_projects/blob/main/footware_sales.ipynb" target="_blank">
+      <span class="proj-num">008</span>
+      <div class="proj-main">
+        <div class="proj-name">Global Footwear Sales</div>
+        <div class="proj-desc">Sports footwear market trends 2018–2026. Brand performance + regional breakdowns across global markets.</div>
+        <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Pandas</span><span class="proj-tag">Global Markets</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">Python</span>
+      </div>
+    </a>
+
+    <a class="project-row reveal" href="https://github.com/shaipshiverya/Data_Analysis_python_projects/blob/main/japan_population_project.ipynb" target="_blank">
+      <span class="proj-num">009</span>
+      <div class="proj-main">
+        <div class="proj-name">Japan Population Study</div>
+        <div class="proj-desc">Demographic data analysis — population trends, age distribution and regional breakdown of Japan.</div>
+        <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Demographics</span><span class="proj-tag">EDA</span></div>
+      </div>
+      <div class="proj-right">
+        <span class="proj-arrow">↗</span>
+        <span class="proj-type">Python</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left reveal">
+    <h2>LET'S<span>TALK.</span></h2>
+    <p class="contact-sub">Looking for my first Data Analyst role. If you have an opportunity or just want to talk data — reach out.</p>
+  </div>
+  <div class="contact-right reveal">
+    <a href="https://www.linkedin.com/in/shaipshi-1b918a162/" target="_blank" class="contact-link">
+      LinkedIn
+      <span>Connect ↗</span>
+    </a>
+    <a href="https://github.com/shaipshiverya" target="_blank" class="contact-link">
+      GitHub
+      <span>View Work ↗</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Shaipshi — Data Analyst</p>
+  <p>Designed & built with passion</p>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0;
+let ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top = mouseY + 'px';
+});
+
+function animateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  ring.style.left = ringX + 'px';
+  ring.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
